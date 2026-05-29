@@ -525,6 +525,13 @@ _MULTIMODAL_MODELS = {
         "qwen2_audio",
         "Qwen2AudioForConditionalGeneration",
     ),
+    # Local fork addition: audio-only LALM (Whisper + Qwen3) — see
+    # libs/vllm/vllm/model_executor/models/custom_lalm.py. The HF config
+    # `architectures` field is `CustomLALMPretrainedModel`.
+    "CustomLALMPretrainedModel": (
+        "custom_lalm",
+        "CustomLALMForConditionalGeneration",
+    ),
     "Qwen2_5OmniModel": (
         "qwen2_5_omni_thinker",
         "Qwen2_5OmniThinkerForConditionalGeneration",
