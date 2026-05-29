@@ -165,11 +165,12 @@ class CustomLALMProcessingInfo(BaseProcessingInfo):
         return self.ctx.model_config.hf_config
 
     def get_hf_processor(self, **kwargs: object) -> ProcessorMixin:
-        # `AutoProcessor.from_pretrained` resolves via `processor_config.json`'s
-        # `auto_map` to our `CustomLALMProcessor`.
-        from transformers import AutoProcessor
-
-        return self.ctx.get_hf_processor(AutoProcessor, **kwargs)
+        # Pass no `typ` arg → vLLM's loader takes the `ProcessorMixin` branch,
+        # which dispatches through `AutoProcessor.from_pretrained` and resolves
+        # our `CustomLALMProcessor` via `processor_config.json`'s `auto_map`.
+        # Passing `AutoProcessor` explicitly hits the wrong branch (it would
+        # try `AutoProcessor(**kwargs)` directly → OSError).
+        return self.ctx.get_hf_processor(**kwargs)
 
     def get_feature_extractor(self, **kwargs: object) -> WhisperFeatureExtractor:
         hf_processor = self.get_hf_processor(**kwargs)
